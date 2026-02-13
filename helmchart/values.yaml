@@ -1,0 +1,39 @@
+---
+mongodb:
+  name: mongodb
+spec:
+ replicas: 8
+labels:
+   app: mongodb
+nodeselector:
+   "kubernetes.io/os": linux
+containers:
+    name: mongodb
+    image: mcr.microsoft.com/mirror/docker/library/mongo
+    tag: 4.3
+    ports:
+      containerPort: 27017
+      name: mongodb
+    resources:
+      requests:
+        cpu: 10m
+        memory: 75Mi
+      limits:
+        cpu: 25m
+        memory: 1024Mi
+    livenessProbe:
+        initialDelaySeconds: 60
+        periodSeconds: 40
+        timeoutSeconds: 5
+        failureThreshold: 3
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 5
+      failureThreshold: 8
+      
+service:
+  name: mongodb
+  ports:
+    port: 27017
+  type: ClusterIP
